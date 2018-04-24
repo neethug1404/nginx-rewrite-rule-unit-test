@@ -1,0 +1,39 @@
+version: "2"
+
+services:
+  test_server:
+    build: ./test_server
+    ports:
+      - "6582:80"
+    volumes:
+      - ./test_server/test-urls.yml:/go/src/app/test-urls.yml
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.10
+  target_nginx:
+    image: nginx
+    volumes:
+      - ./target_nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./target_nginx/cert.crt:/etc/ssl/certs/cert.crt
+      - ./target_nginx/cert.key:/etc/ssl/certs/cert.key
+    extra_hosts:
+      - "abc.com:172.20.128.30"
+      - "proxy.com:172.20.128.30"
+      - "source.com:172.20.128.30"
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.20
+  dummy_web_server:
+    build: ./dummy_web_server
+    ports:
+      - "9582:80"
+      - "9583:443"
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.30
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

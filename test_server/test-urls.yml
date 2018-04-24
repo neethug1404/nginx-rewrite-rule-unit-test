@@ -1,0 +1,9 @@
+- name: test 1
+  test: https://proxy.com/like/test1
+  expected: https://abc.com/item.php?itemid=test1
+- name: test 2
+  test: http://source.com/go/test2
+  expected: http://source.com/item.php?name=test2
+- name: test 3
+  test: http://source.com/go/test3
+  expected: http://source.com/item.php?name=test0
